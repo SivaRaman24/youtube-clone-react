@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import SearchSuggestionList from "./SearchSuggestionList";
-import { YOUTUBE_SUGGESTION_API, SUGGESTIONS } from "../constants/Config";
+import { YOUTUBE_SUGGESTION_API } from "../constants/Config";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,7 +84,6 @@ const Header = () => {
                 handleOnInputChangeEvent(e);
               }}
               onFocus={() => {
-                console.log("onFocus");
                 setShowSuggestions(true);
               }}
               //TODO: Need to fix this event delegation issue (event.stopPropagation is not working on child component)
