@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import SearchSuggestionList from "./SearchSuggestionList";
 import { YOUTUBE_SUGGESTION_API } from "../constants/Config";
+import { useDispatch, useSelector } from "react-redux";
+import { changeSideNavType } from "../utils/store/appSlice";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -8,6 +10,8 @@ const Header = () => {
   const [searchSuggestions, setSearchSuggestions] =
     useState(initialSuggestions);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const sideNavType = useSelector((state) => state.app.sideNavType);
+  const dispatcher = useDispatch();
 
   useEffect(() => {
     const delayTimer = setTimeout(() => {
@@ -41,19 +45,30 @@ const Header = () => {
     setSearchQuery(e.target.value);
   };
 
+  const handleSideNavToggle = () => {
+    if(sideNavType === 'normal') {
+      dispatcher(changeSideNavType('mini'));
+    } else if(sideNavType === 'mini') {
+      dispatcher(changeSideNavType('normal'));
+    }
+  }
+
   return (
     <header className="flex flex-column justify-between items-center px-4 w-full">
       <div className="left-side-content flex w-1/4">
-        <picture className="p-2 hover:bg-gray-200 rounded-full cursor-pointer">
-          <source
-            srcSet={process.env.PUBLIC_URL + "/svgs_collection/hamburger.svg"}
-          ></source>
-          <img
-            src={process.env.PUBLIC_URL + "/svgs_collection/hamburger.svg"}
-            alt="Hamburger menu"
-            className="w-6 h-6"
-          />
-        </picture>
+        <button className="p-2 hover:bg-gray-200 rounded-full cursor-pointer" onClick={() => handleSideNavToggle()}>
+          <picture>
+            <source
+              srcSet={process.env.PUBLIC_URL + "/svgs_collection/hamburger.svg"}
+            ></source>
+            <img
+              src={process.env.PUBLIC_URL + "/svgs_collection/hamburger.svg"}
+              alt="Hamburger menu"
+              className="w-6 h-6"
+            />
+          </picture>
+        </button>
+
         <picture className="p-2 cursor-pointer">
           <source
             srcSet={process.env.PUBLIC_URL + "/svgs_collection/youtube.svg"}
@@ -66,7 +81,7 @@ const Header = () => {
         </picture>
       </div>
       <div className="center-content p-2 flex w-2/4">
-        <form className="flex">
+        <form className="flex flex-row absolute">
           <div id="search-input">
             <input
               className="pl-4 pr-1 py-2 w-[640px] border border-gray-500 rounded-l-full"
